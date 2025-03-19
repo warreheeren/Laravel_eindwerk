@@ -21,25 +21,36 @@ class ProfileController extends Controller
     }
 
     public function updateEmail(Request $request) {
-        // Valideer het formulier, zorg dat het terug ingevuld wordt, en toon de foutmeldingen
-         $validated = $request->validate([
-            'email' =>'required|string|email|max:255|unique:users',
-            Rule::unique('users')->ignore(Auth::id())
+        $validated = $request->validate([
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore(Auth::id())]
         ]);
 
-         Auth::user()->update([
-            'email' => $validated['email'],
-        ]);
+        $user = $request->user();
+        $user->email = $validated['email'];
+        $user->save();
 
         return back()->with('success', 'E-mailadres succesvol gewijzigd!');
     }
 
     public function updatePassword(Request $request) {
-        // Valideer het formulier, zorg dat het terug ingevuld wordt, en toon de foutmeldingen
-        // Wachtwoord is verplicht en moet confirmed zijn.
-        // Update de gegevens van de ingelogde gebruiker met het nieuwe "hashed" password
+        $validated = $request->validate([
+            'current_password' => ['required', 'current_password:'. Auth::user()->password],
+            'password' => ['required','string','min:8', 'confirmed'],
+        ]);
 
-        // BONUS: Stuur een e-mail naar de gebruiker met de melding dat zijn wachtwoord gewijzigd is.
+        if (!Auth::attempt(['email' => Auth::user()->email, 'password' => $validated['current_password']])) {
+            return back()->withErrors(['current_password' => 'Het huidige wachtwoord is onjuist.']);
+        }
+
+         $validated = $request->validate([
+            'current_password' => ['required', 'current_password:'. Auth::user()->password],
+            'password' => ['required','string','min:8', 'confirmed'],
+        ]);
+        if (!Auth::attempt(['email' => Auth::user()->email, 'password' => $validated['current_password']])) {
+            return back()->withErrors(['current_password' => 'Het huidige wachtwoord is onjuist.']);
+        }
+        $request->user()->password =  bcrypt($validated['password']);
+        $request->user()->save();
 
         return redirect()->route('profile.edit');
     }
