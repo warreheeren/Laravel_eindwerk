@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -20,15 +22,16 @@ class ProfileController extends Controller
 
     public function updateEmail(Request $request) {
         // Valideer het formulier, zorg dat het terug ingevuld wordt, en toon de foutmeldingen
+         $validated = $request->validate([
+            'email' =>'required|string|email|max:255|unique:users',
+            Rule::unique('users')->ignore(Auth::id())
+        ]);
 
-        // Emailadres is verplicht en moet uniek zijn (behalve voor het huidge id van de gebruiker).
+         Auth::user()->update([
+            'email' => $validated['email'],
+        ]);
 
-        // https://laravel.com/docs/9.x/validation#rule-unique -> Forcing A Unique Rule To Ignore A Given ID
-        // Update de gegevens van de ingelogde gebruiker
-
-        // BONUS: Stuur een e-mail naar de gebruiker met de melding dat zijn e-mailadres gewijzigd is.
-
-        return redirect()->route('profile.edit');
+        return back()->with('success', 'E-mailadres succesvol gewijzigd!');
     }
 
     public function updatePassword(Request $request) {
