@@ -13,6 +13,7 @@ class OrdersController extends Controller
 
     public function store(Request $request) {
         // Valideer het formulier zodat alle velden verplicht zijn.
+
         // Vul het formulier terug in, en toon de foutmeldingen.
 
         // Maak een nieuw "order" met de gegevens uit het formulier in de databank
