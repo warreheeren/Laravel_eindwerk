@@ -24,6 +24,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->intended(route('profile'));
         }
+        return back()->withErrors(['email' => 'Het ingevoerde emailadres of wachtwoord is onjuist.']);
     }
 
     public function register() {
@@ -50,7 +51,6 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request) {
-        // Gebruiker moet uitloggen
         Auth::logout();
 
         $request->session()->invalidate();

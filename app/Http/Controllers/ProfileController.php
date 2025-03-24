@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -33,25 +34,14 @@ class ProfileController extends Controller
     }
 
     public function updatePassword(Request $request) {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password:'. Auth::user()->password],
-            'password' => ['required','string','min:8', 'confirmed'],
+       $validated = $request->validate([
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        if (!Auth::attempt(['email' => Auth::user()->email, 'password' => $validated['current_password']])) {
-            return back()->withErrors(['current_password' => 'Het huidige wachtwoord is onjuist.']);
-        }
+        $user = $request->user();
+        $user->password = Hash::make($validated['password']);
+        $user->save();
 
-         $validated = $request->validate([
-            'current_password' => ['required', 'current_password:'. Auth::user()->password],
-            'password' => ['required','string','min:8', 'confirmed'],
-        ]);
-        if (!Auth::attempt(['email' => Auth::user()->email, 'password' => $validated['current_password']])) {
-            return back()->withErrors(['current_password' => 'Het huidige wachtwoord is onjuist.']);
-        }
-        $request->user()->password =  bcrypt($validated['password']);
-        $request->user()->save();
-
-        return redirect()->route('profile.edit');
+        return back()->with('success_password', 'Wachtwoord is succesvol gewijzigd!');
     }
 }

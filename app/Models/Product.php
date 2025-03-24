@@ -20,4 +20,10 @@ class Product extends Model
     public function brand() {
         return $this->belongsTo(Brand::class);
     }
+    public function usersInCart()
+    {
+        return $this->belongsToMany(User::class, 'shopping_cart')
+                    ->withPivot('quantity', 'size')
+                    ->withTimestamps();
+    }
 }

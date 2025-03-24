@@ -2,8 +2,9 @@
     @csrf
     <div class="flex gap-4">
         <div class="relative flex-1">
-            <select class="rounded-none w-full block py-2 px-4 bg-white appearance-none border border-gray-500" name="size" id="">
-                @foreach($product->available_sizes as $size)
+            <select class="rounded-none w-full block py-2 px-4 bg-white appearance-none border border-gray-500"
+                name="size" id="">
+                @foreach ($product->available_sizes as $size)
                     <option value="{{ $size }}">{{ $size }}</option>
                 @endforeach
             </select>
@@ -12,13 +13,17 @@
             </div>
         </div>
         <div class="">
-            <input placeholder="Aantal" value="1" class="py-2 px-4 bg-white appearance-none border border-gray-500" type="number" name="quantity">
+            <input placeholder="Aantal" value="1" class="py-2 px-4 bg-white appearance-none border border-gray-500"
+                type="number" name="quantity">
         </div>
     </div>
     <div class="my-4 flex gap-4">
         <button class="block hover:bg-gray-800 bg-black text-white px-4 py-2 w-full" type="submit">
             Bestel nu!
         </button>
+        @error('error')
+            <div class="text-red-500 text-xs">{{ $message }}</div>
+        @enderror
         @include('store.includes.favorite')
     </div>
 </form>

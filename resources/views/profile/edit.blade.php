@@ -23,7 +23,9 @@
                     @error('email')
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
-
+                    @if (session()->has('success'))
+                        <p class="text-green-500">{{ session('success') }}</p>
+                    @endif
                 </div>
 
                 <div>
@@ -42,17 +44,20 @@
                 <p class="font-semibold text-xl mb-4">Wachtwoord instellen</p>
 
                 <div class="flex flex-col">
-                    <label class="text-gray-500" for="voornaam">Nieuw wachtwoord: *</label>
+                    <label class="text-gray-500" for="password">Nieuw wachtwoord: *</label>
                     <input name="password" type="password" class="bg-white border border-gray-500 px-4 py-2">
-                    <p class="text-red-500">Dit is een foutmelding.</p>
+                    @error('password')
+                        <p class="text-red-500"> {{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="flex flex-col">
-                    <label class="text-gray-500" for="voornaam">Confirmeer nieuw wachtwoord: *</label>
+                    <label class="text-gray-500" for="password_confirmation">Confirmeer nieuw wachtwoord: *</label>
                     <input name="password_confirmation" type="password" class="bg-white border border-gray-500 px-4 py-2">
-                    <p class="text-red-500">Dit is een foutmelding.</p>
                 </div>
-
+                @if (session()->has('success_password'))
+                    <p class="text-green-500">{{ session('success_password') }}</p>
+                @endif
                 <div>
                     <button type="submit"
                         class="mt-4 block hover:bg-orange-600 bg-orange-500 uppercase text-center font-semibold text-lg cursor-pointer text-white px-4 py-2 w-full">
@@ -61,8 +66,6 @@
                 </div>
 
             </form>
-
-
         </div>
     </div>
 @endsection
