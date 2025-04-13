@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    protected $fillable = [
+        'voornaam',
+        'achternaam',
+        'straat',
+        'huisnummer',
+        'postcode',
+        'woonplaats',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -13,6 +21,6 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'price'); // Voeg extra kolommen toe zoals quantity en price indien nodig
+        return $this->belongsToMany(Product::class, 'order_product')->withPivot('quantity', 'size')->withTimestamps();
     }
 }

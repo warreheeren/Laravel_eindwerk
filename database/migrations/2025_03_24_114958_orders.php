@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('voornaam');
             $table->string('achternaam');
             $table->string('straat');
             $table->string('huisnummer');
             $table->string('postcode');
             $table->string('woonplaats');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
